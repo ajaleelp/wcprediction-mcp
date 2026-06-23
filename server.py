@@ -14,6 +14,16 @@ def list_teams() -> list[dict]:
     teams = json.loads(TEAMS_PATH.read_text())
     return teams
 
+
+@mcp.tool()
+def get_team(code: str) -> dict | None:
+    """Returns the code, full name, short name and flag of a team with the given code like BRA"""
+    teams = json.loads(TEAMS_PATH.read_text())
+    for team in teams:
+        if team['code'] == code.upper():
+            return team
+    return None
+
 if __name__ == "__main__":
     mcp.run()
     
