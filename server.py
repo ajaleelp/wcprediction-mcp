@@ -1,6 +1,8 @@
 import json
 from pathlib import Path
 
+import game_data
+
 from mcp.server.fastmcp import FastMCP
 
 mcp = FastMCP('wcprediction')
@@ -23,6 +25,12 @@ def get_team(code: str) -> dict | None:
         if team['code'] == code.upper():
             return team
     return None
+
+
+@mcp.tool()
+def get_matches_for_team(code: str) -> list[dict]:
+    """List a team's World Cup matches (kick-off, stage, venue, opponents, and score if played) by team code like BRA."""
+    return game_data.matches_for_team(code)
 
 if __name__ == "__main__":
     mcp.run()
