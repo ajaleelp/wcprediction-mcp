@@ -1,0 +1,290 @@
+[
+  {
+    "code": "ALG",
+    "full_name": "Algeria",
+    "short_name": "ALG",
+    "flag": "dz"
+  },
+  {
+    "code": "ARG",
+    "full_name": "Argentina",
+    "short_name": "ARG",
+    "flag": "ar"
+  },
+  {
+    "code": "AUS",
+    "full_name": "Australia",
+    "short_name": "AUS",
+    "flag": "au"
+  },
+  {
+    "code": "AUT",
+    "full_name": "Austria",
+    "short_name": "AUT",
+    "flag": "at"
+  },
+  {
+    "code": "BEL",
+    "full_name": "Belgium",
+    "short_name": "BEL",
+    "flag": "be"
+  },
+  {
+    "code": "BIH",
+    "full_name": "Bosnia & Herzegovina",
+    "short_name": "BIH",
+    "flag": "ba"
+  },
+  {
+    "code": "BRA",
+    "full_name": "Brazil",
+    "short_name": "BRA",
+    "flag": "br"
+  },
+  {
+    "code": "CAN",
+    "full_name": "Canada",
+    "short_name": "CAN",
+    "flag": "ca"
+  },
+  {
+    "code": "CIV",
+    "full_name": "Ivory Coast",
+    "short_name": "CIV",
+    "flag": "ci"
+  },
+  {
+    "code": "COD",
+    "full_name": "Congo DR",
+    "short_name": "COD",
+    "flag": "cd"
+  },
+  {
+    "code": "COL",
+    "full_name": "Colombia",
+    "short_name": "COL",
+    "flag": "co"
+  },
+  {
+    "code": "CPV",
+    "full_name": "Cape Verde Islands",
+    "short_name": "CPV",
+    "flag": "cv"
+  },
+  {
+    "code": "CRO",
+    "full_name": "Croatia",
+    "short_name": "CRO",
+    "flag": "hr"
+  },
+  {
+    "code": "CUW",
+    "full_name": "Curaçao",
+    "short_name": "CUW",
+    "flag": "cw"
+  },
+  {
+    "code": "CZE",
+    "full_name": "Czech Republic",
+    "short_name": "CZE",
+    "flag": "cz"
+  },
+  {
+    "code": "ECU",
+    "full_name": "Ecuador",
+    "short_name": "ECU",
+    "flag": "ec"
+  },
+  {
+    "code": "EGY",
+    "full_name": "Egypt",
+    "short_name": "EGY",
+    "flag": "eg"
+  },
+  {
+    "code": "ENG",
+    "full_name": "England",
+    "short_name": "ENG",
+    "flag": "gb-eng"
+  },
+  {
+    "code": "ESP",
+    "full_name": "Spain",
+    "short_name": "ESP",
+    "flag": "es"
+  },
+  {
+    "code": "FRA",
+    "full_name": "France",
+    "short_name": "FRA",
+    "flag": "fr"
+  },
+  {
+    "code": "GER",
+    "full_name": "Germany",
+    "short_name": "GER",
+    "flag": "de"
+  },
+  {
+    "code": "GHA",
+    "full_name": "Ghana",
+    "short_name": "GHA",
+    "flag": "gh"
+  },
+  {
+    "code": "HAI",
+    "full_name": "Haiti",
+    "short_name": "HAI",
+    "flag": "ht"
+  },
+  {
+    "code": "IRN",
+    "full_name": "Iran",
+    "short_name": "IRN",
+    "flag": "ir"
+  },
+  {
+    "code": "IRQ",
+    "full_name": "Iraq",
+    "short_name": "IRQ",
+    "flag": "iq"
+  },
+  {
+    "code": "JOR",
+    "full_name": "Jordan",
+    "short_name": "JOR",
+    "flag": "jo"
+  },
+  {
+    "code": "JPN",
+    "full_name": "Japan",
+    "short_name": "JPN",
+    "flag": "jp"
+  },
+  {
+    "code": "KOR",
+    "full_name": "South Korea",
+    "short_name": "KOR",
+    "flag": "kr"
+  },
+  {
+    "code": "KSA",
+    "full_name": "Saudi Arabia",
+    "short_name": "KSA",
+    "flag": "sa"
+  },
+  {
+    "code": "MAR",
+    "full_name": "Morocco",
+    "short_name": "MAR",
+    "flag": "ma"
+  },
+  {
+    "code": "MEX",
+    "full_name": "Mexico",
+    "short_name": "MEX",
+    "flag": "mx"
+  },
+  {
+    "code": "NED",
+    "full_name": "Netherlands",
+    "short_name": "NED",
+    "flag": "nl"
+  },
+  {
+    "code": "NOR",
+    "full_name": "Norway",
+    "short_name": "NOR",
+    "flag": "no"
+  },
+  {
+    "code": "NZL",
+    "full_name": "New Zealand",
+    "short_name": "NZL",
+    "flag": "nz"
+  },
+  {
+    "code": "PAN",
+    "full_name": "Panama",
+    "short_name": "PAN",
+    "flag": "pa"
+  },
+  {
+    "code": "PAR",
+    "full_name": "Paraguay",
+    "short_name": "PAR",
+    "flag": "py"
+  },
+  {
+    "code": "POR",
+    "full_name": "Portugal",
+    "short_name": "POR",
+    "flag": "pt"
+  },
+  {
+    "code": "QAT",
+    "full_name": "Qatar",
+    "short_name": "QAT",
+    "flag": "qa"
+  },
+  {
+    "code": "RSA",
+    "full_name": "South Africa",
+    "short_name": "RSA",
+    "flag": "za"
+  },
+  {
+    "code": "SCO",
+    "full_name": "Scotland",
+    "short_name": "SCO",
+    "flag": "gb-sct"
+  },
+  {
+    "code": "SEN",
+    "full_name": "Senegal",
+    "short_name": "SEN",
+    "flag": "sn"
+  },
+  {
+    "code": "SUI",
+    "full_name": "Switzerland",
+    "short_name": "SUI",
+    "flag": "ch"
+  },
+  {
+    "code": "SWE",
+    "full_name": "Sweden",
+    "short_name": "SWE",
+    "flag": "se"
+  },
+  {
+    "code": "TUN",
+    "full_name": "Tunisia",
+    "short_name": "TUN",
+    "flag": "tn"
+  },
+  {
+    "code": "TUR",
+    "full_name": "Türkiye",
+    "short_name": "TUR",
+    "flag": "tr"
+  },
+  {
+    "code": "URU",
+    "full_name": "Uruguay",
+    "short_name": "URU",
+    "flag": "uy"
+  },
+  {
+    "code": "USA",
+    "full_name": "USA",
+    "short_name": "USA",
+    "flag": "us"
+  },
+  {
+    "code": "UZB",
+    "full_name": "Uzbekistan",
+    "short_name": "UZB",
+    "flag": "uz"
+  }
+]
