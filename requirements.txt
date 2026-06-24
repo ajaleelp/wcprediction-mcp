@@ -1,2 +1,4 @@
 mcp[cli]==1.28.0
 psycopg[binary]==3.3.4
+mistralai==1.12.4
+python-dotenv==1.2.2
