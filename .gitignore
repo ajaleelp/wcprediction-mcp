@@ -11,3 +11,6 @@ venv/
 
 # OS
 .DS_Store
+
+# Fetched corpus (regenerate with: python build_corpus.py)
+data/knowledge/
