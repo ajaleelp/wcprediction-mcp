@@ -12,5 +12,6 @@ venv/
 # OS
 .DS_Store
 
-# Fetched corpus (regenerate with: python build_corpus.py)
+# Fetched corpus + generated embeddings (regenerate with: python build_corpus.py)
 data/knowledge/
+data/embeddings.json

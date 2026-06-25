@@ -2,6 +2,7 @@ import json
 from pathlib import Path
 
 import game_data
+import rag
 
 from mcp.server.fastmcp import FastMCP
 
@@ -31,6 +32,13 @@ def get_team(code: str) -> dict | None:
 def get_matches_for_team(code: str) -> list[dict]:
     """List a team's World Cup matches (kick-off, stage, venue, opponents, and score if played) by team code like BRA."""
     return game_data.matches_for_team(code)
+
+@mcp.tool()
+def search_knowledge(query: str) -> list[dict]:
+    """Search the football knowledge base (team histories, notable players, World Cup
+    records, playing styles) for background passages relevant to a question. Use this for
+    historical or background questions — NOT for live fixtures, results, or standings."""
+    return rag.search(query)
 
 if __name__ == "__main__":
     mcp.run()

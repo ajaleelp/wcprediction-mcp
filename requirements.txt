@@ -4,3 +4,4 @@ mistralai==1.12.4
 python-dotenv==1.2.2
 griffe==2.1.0
 Wikipedia-API==0.15.0
+numpy==2.4.6
