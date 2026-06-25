@@ -1,14 +1,14 @@
 # wcprediction-mcp
 
-> A hands-on learning project: an AI assistant for a **World Cup 2026 prediction game**, built on
-> Mistral's stack — an **MCP tool server** over the game's data, **two agent implementations**, and a
-> **RAG knowledge base** over football articles embedded with `mistral-embed`.
+> A project for exploring Mistral's applied-AI toolchain end to end, built around a real use case:
+> an AI companion for a **World Cup 2026 prediction game**. It deliberately touches every layer —
+> an **MCP tool server** over the game's data, **two agent implementations** (hand-rolled and
+> SDK-native), a **RAG knowledge base** embedded with `mistral-embed`, and a **faithfulness eval**.
 
-**This is a personal, recent, build-in-the-open learning project** — I built it to get genuinely
-hands-on with the modern applied-AI stack: the Model Context Protocol (MCP), Mistral's models and
-Agents API, embeddings, and retrieval-augmented generation. It's AI-assisted, but built to
-*understand every piece*, not just run it. Expect rough edges — the commit history is the
-step-by-step build.
+The aim is breadth: one project that walks through the Model Context Protocol (MCP), the Agents API,
+embeddings, retrieval-augmented generation, and evaluation — the pieces of Mistral's stack and how
+they fit together. Built in the open, commit by commit; AI-assisted, with each layer added once its
+role was clear.
 
 ## The idea
 
@@ -48,11 +48,11 @@ statistics-model job, not an LLM one, so the assistant sticks to grounded facts.
 | `game_data.py` | A data-access **seam** (repository) over the game's Postgres — keeps SQL out of the tools so the data source stays swappable. |
 | `build_corpus.py` | Offline build: fetch team articles from Wikipedia → chunk → embed with `mistral-embed` → save `embeddings.json`. |
 | `rag.py` | Runtime **retrieval** — loads the embeddings and does cosine-similarity search by meaning. |
-| `agent.py` | A **hand-rolled** agent: the chat-completion tool-call loop written from scratch (to understand it). |
+| `agent.py` | A **hand-rolled** agent: the chat-completion tool-call loop written from scratch — the reference implementation that shows what the SDK does under the hood. |
 | `agent_native.py` | The same idea via Mistral's **native Agents API + MCP** over stdio — the SDK runs the loop. |
 
-Building both agents was deliberate: the hand-rolled loop makes clear *what* the native Agents API
-does for you under the hood.
+Building both agents was deliberate: the hand-rolled loop makes explicit *what* the native Agents API
+abstracts away — and clarifies when each is the right call.
 
 ## Setup
 
@@ -85,24 +85,36 @@ python agent.py
 python agent_native.py "How did Brazil perform in past World Cups?"
 ```
 
-## What this exercises
+## The journey
 
-MCP server design · tool / function calling · agent orchestration (hand-rolled **and** SDK-native) ·
-embeddings & semantic retrieval · RAG grounding · a clean data-access seam · and the judgment of
-*which tool fits which job* (live data → DB tools; background → RAG; prediction → neither).
+A checklist of the build, layer by layer. Each step explores another part of Mistral's stack, and
+earns its place by improving a measurable outcome — not by being added for its own sake. The running
+judgment call throughout: *which tool fits which job* (live data → DB tools; background knowledge →
+RAG; prediction → neither).
 
-## Scope / future work
+**Foundation — tools, agents, retrieval**
+- [x] **MCP tool server** — `list_teams`, `get_team`, `get_matches_for_team` over the game's Postgres, plus `search_knowledge`
+- [x] **Data-access seam** — a repository over Postgres so the data source stays swappable
+- [x] **Agent, hand-rolled** — the chat-completion tool-call loop written from scratch
+- [x] **Agent, SDK-native** — the same loop via Mistral's Agents API + MCP over stdio
+- [x] **Embeddings + corpus** — Wikipedia articles chunked and embedded with `mistral-embed` (offline build)
+- [x] **RAG retrieval** — cosine-similarity semantic search over the embeddings
 
-- **Faithfulness eval** (in progress) — an LLM-as-judge that verifies answers are grounded in the
-  retrieved chunks rather than the model's own (possibly stale) knowledge.
-- **Advanced RAG** — reranking, query rewriting / HyDE, smarter chunking; measure the
-  retrieval-quality delta each step.
-- **Live football data tools** — head-to-head, recent form, standings via a football API, with a
-  caching layer ("fetch once, serve many") to stay within free rate limits.
-- **Proprietary game tools** — "where am I going wrong", league prediction trends (per-user scoped,
-  honoring the game's reveal-after-lock rule).
-- **Production** — swap the in-memory numpy retrieval for a vector DB (e.g. `pgvector` in the
-  existing Postgres); serve the assistant via a chat widget inside the game.
+**Quality — making the answers trustworthy**
+- [ ] **Faithfulness eval** *(in progress)* — an LLM-as-judge that verifies answers are grounded in the retrieved chunks, not the model's own memory. Becomes the measuring stick for everything below.
+- [ ] **Advanced RAG** — reranking, query rewriting / HyDE, smarter chunking; each kept only if it moves the eval number
+
+**Usefulness — real football data**
+- [ ] **Live football data tools** — head-to-head, recent form, standings via a football API, with a caching layer ("fetch once, serve many") to stay within free rate limits
+- [ ] **Proprietary game tools** — "where am I going wrong", league prediction trends (per-user scoped, honoring the game's reveal-after-lock rule)
+
+**Going deeper on the model**
+- [ ] **Fine-tuning** — a small Mistral fine-tune for behavior/format that prompting can't pin down reliably; added only when prompt-engineering plateaus, and judged by the same eval
+- [ ] **Inference & serving** — quantization and cost/latency trade-offs for running it cheaply at the game's scale
+
+**Production**
+- [ ] **Vector DB** — swap the in-memory numpy retrieval for `pgvector` in the existing Postgres
+- [ ] **Chat widget** — serve the assistant inside the game itself
 
 ## License
 
