@@ -31,6 +31,7 @@ RAG; the scoreline → the user's call, never the assistant's).
 
 **Usefulness — real football data**
 - [x] **Football-world data (openfootball)** — all-time World Cup titles and current-tournament form, with a schedule-gated live cache (refresh only around matches, not on a blind timer); routed via the agent with observable tool calls and a forgiving team resolver (code *or* name). Head-to-head and standings still to add.
+- [x] **Live news & injuries** — Mistral's built-in web search on the native agent, so the read reflects current news/injuries, not just historical data
 - [ ] **Proprietary game tools** — "where am I going wrong", league prediction trends (per-user scoped, honoring the game's reveal-after-lock rule)
 
 **Going deeper on the model**
@@ -44,19 +45,18 @@ RAG; the scoreline → the user's call, never the assistant's).
 ## The idea
 
 A companion assistant for a **World Cup 2026 prediction game** (a separate web app where players
-predict match outcomes). It answers two kinds of question:
+predict match outcomes). It briefs the player from three kinds of grounded source:
 
-- **Live game data** (fixtures, results, a team's matches) — via MCP tools backed by the game's
-  PostgreSQL database.
-- **Football-world knowledge** (team histories, World Cup records, players) — via **RAG** over
-  Wikipedia articles, embedded with `mistral-embed`.
+- **Live game data** (fixtures, results, a team's form) — via MCP tools over the game's database and openfootball.
+- **Football-world knowledge** (team histories, World Cup records, players) — via **RAG** over Wikipedia articles embedded with `mistral-embed`.
+- **Live news & injuries** — via Mistral's built-in **web search**, so the read reflects what's happening right now.
 
-It is a **match-prep analyst, not a predictor**. The scoreline is the player's call (their game
-entry is winner + exact score), so the assistant arms that decision with grounded analysis — recent
-form, what's at stake, and a reasoned read on how each team is likely to play (aggressive vs
-defensive, high- vs low-scoring) — and deliberately **never states a scoreline or declares a
-winner**. A calibrated scoreline is a statistics-model job, not an LLM's; the assistant stays in its
-lane and hands the prediction back to the user.
+It is a **match-prep analyst, not a predictor**. It arms the player's pick with grounded analysis —
+recent form, what's at stake, the latest news and injuries, and a read on how each team is likely to
+play — then concludes with a **hedged lean**: the likely favourite and whether the game looks high-
+or low-scoring. It stops there: it **never invents the exact scoreline** (that precise call is the
+player's game entry) and never fabricates a stat. A *calibrated* scoreline is a statistics-model
+job, not an LLM's.
 
 ## Architecture
 
