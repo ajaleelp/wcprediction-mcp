@@ -10,6 +10,37 @@ embeddings, retrieval-augmented generation, and evaluation — the pieces of Mis
 they fit together. Built in the open, commit by commit; AI-assisted, with each layer added once its
 role was clear.
 
+## The journey
+
+A checklist of the build, layer by layer. Each step explores another part of Mistral's stack, and
+earns its place by improving a measurable outcome — not by being added for its own sake. The running
+judgment call throughout: *which tool fits which job* (live data → DB tools; background knowledge →
+RAG; prediction → neither).
+
+**Foundation — tools, agents, retrieval**
+- [x] **MCP tool server** — `list_teams`, `get_team`, `get_matches_for_team` over the game's Postgres, plus `search_knowledge`
+- [x] **Data-access seam** — a repository over Postgres so the data source stays swappable
+- [x] **Agent, hand-rolled** — the chat-completion tool-call loop written from scratch
+- [x] **Agent, SDK-native** — the same loop via Mistral's Agents API + MCP over stdio
+- [x] **Embeddings + corpus** — Wikipedia articles chunked and embedded with `mistral-embed` (offline build)
+- [x] **RAG retrieval** — cosine-similarity semantic search over the embeddings
+
+**Quality — making the answers trustworthy**
+- [x] **Faithfulness + relevancy eval** — an LLM-as-judge that checks answers are grounded in the retrieved chunks (faithfulness) *and* actually address the question (relevancy), with a judge-validation set and per-question diagnostics. The measuring stick for everything below.
+- [x] **Advanced RAG** — eval-driven retrieval-depth tuning (a measured faithfulness gain); reranking / HyDE / smarter chunking deferred until the eval shows they're needed
+
+**Usefulness — real football data**
+- [x] **Football-world data (openfootball)** — all-time World Cup titles and current-tournament form, with a schedule-gated live cache (refresh only around matches, not on a blind timer); routed via the agent with observable tool calls and a forgiving team resolver (code *or* name). Head-to-head and standings still to add.
+- [ ] **Proprietary game tools** — "where am I going wrong", league prediction trends (per-user scoped, honoring the game's reveal-after-lock rule)
+
+**Going deeper on the model**
+- [ ] **Fine-tuning** *(in progress)* — a small Mistral fine-tune for behavior/format that prompting can't pin down reliably; taken on now that the system works and the eval can measure the before/after
+- [ ] **Inference & serving** — quantization and cost/latency trade-offs for running it cheaply at the game's scale
+
+**Production**
+- [ ] **Vector DB** — swap the in-memory numpy retrieval for `pgvector` in the existing Postgres
+- [ ] **Chat widget** — serve the assistant inside the game itself
+
 ## The idea
 
 A companion assistant for a **World Cup 2026 prediction game** (a separate web app where players
@@ -84,37 +115,6 @@ mcp dev server.py              # opens the MCP Inspector
 python agent.py
 python agent_native.py "How did Brazil perform in past World Cups?"
 ```
-
-## The journey
-
-A checklist of the build, layer by layer. Each step explores another part of Mistral's stack, and
-earns its place by improving a measurable outcome — not by being added for its own sake. The running
-judgment call throughout: *which tool fits which job* (live data → DB tools; background knowledge →
-RAG; prediction → neither).
-
-**Foundation — tools, agents, retrieval**
-- [x] **MCP tool server** — `list_teams`, `get_team`, `get_matches_for_team` over the game's Postgres, plus `search_knowledge`
-- [x] **Data-access seam** — a repository over Postgres so the data source stays swappable
-- [x] **Agent, hand-rolled** — the chat-completion tool-call loop written from scratch
-- [x] **Agent, SDK-native** — the same loop via Mistral's Agents API + MCP over stdio
-- [x] **Embeddings + corpus** — Wikipedia articles chunked and embedded with `mistral-embed` (offline build)
-- [x] **RAG retrieval** — cosine-similarity semantic search over the embeddings
-
-**Quality — making the answers trustworthy**
-- [x] **Faithfulness + relevancy eval** — an LLM-as-judge that checks answers are grounded in the retrieved chunks (faithfulness) *and* actually address the question (relevancy), with a judge-validation set and per-question diagnostics. The measuring stick for everything below.
-- [x] **Advanced RAG** — eval-driven retrieval-depth tuning (a measured faithfulness gain); reranking / HyDE / smarter chunking deferred until the eval shows they're needed
-
-**Usefulness — real football data**
-- [x] **Football-world data (openfootball)** — all-time World Cup titles and current-tournament form, with a schedule-gated live cache (refresh only around matches, not on a blind timer); routed via the agent with observable tool calls and a forgiving team resolver (code *or* name). Head-to-head and standings still to add.
-- [ ] **Proprietary game tools** — "where am I going wrong", league prediction trends (per-user scoped, honoring the game's reveal-after-lock rule)
-
-**Going deeper on the model**
-- [ ] **Fine-tuning** *(in progress)* — a small Mistral fine-tune for behavior/format that prompting can't pin down reliably; taken on now that the system works and the eval can measure the before/after
-- [ ] **Inference & serving** — quantization and cost/latency trade-offs for running it cheaply at the game's scale
-
-**Production**
-- [ ] **Vector DB** — swap the in-memory numpy retrieval for `pgvector` in the existing Postgres
-- [ ] **Chat widget** — serve the assistant inside the game itself
 
 ## License
 
