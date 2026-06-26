@@ -1,6 +1,7 @@
 import json
 from pathlib import Path
 
+import football_data
 import game_data
 import rag
 
@@ -32,6 +33,15 @@ def get_team(code: str) -> dict | None:
 def get_matches_for_team(code: str) -> list[dict]:
     """List a team's World Cup matches (kick-off, stage, venue, opponents, and score if played) by team code like BRA."""
     return game_data.matches_for_team(code)
+
+
+@mcp.tool()
+def get_world_cup_record(team: str) -> dict:
+    """Return a national team's all-time World Cup title record — how many titles and which
+    years — by team name like 'Brazil'. Use for historical 'has X ever won the World Cup' or
+    'how many World Cups has X won' questions; returns 0 titles for teams that never won."""
+    return football_data.world_cup_record(team)
+
 
 @mcp.tool()
 def search_knowledge(query: str) -> list[dict]:
