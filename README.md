@@ -15,7 +15,7 @@ role was clear.
 A checklist of the build, layer by layer. Each step explores another part of Mistral's stack, and
 earns its place by improving a measurable outcome — not by being added for its own sake. The running
 judgment call throughout: *which tool fits which job* (live data → DB tools; background knowledge →
-RAG; prediction → neither).
+RAG; the scoreline → the user's call, never the assistant's).
 
 **Foundation — tools, agents, retrieval**
 - [x] **MCP tool server** — `list_teams`, `get_team`, `get_matches_for_team` over the game's Postgres, plus `search_knowledge`
@@ -34,7 +34,7 @@ RAG; prediction → neither).
 - [ ] **Proprietary game tools** — "where am I going wrong", league prediction trends (per-user scoped, honoring the game's reveal-after-lock rule)
 
 **Going deeper on the model**
-- [ ] **Fine-tuning** *(in progress)* — a small Mistral fine-tune for behavior/format that prompting can't pin down reliably; taken on now that the system works and the eval can measure the before/after
+- [ ] **Fine-tuning** *(in progress)* — a QLoRA fine-tune for the assistant's core behavior: act as a grounded match-prep analyst (form, stakes, likely approach) that never fabricates a scoreline or winner, A/B'd against base+prompt on the eval
 - [ ] **Inference & serving** — quantization and cost/latency trade-offs for running it cheaply at the game's scale
 
 **Production**
@@ -51,8 +51,12 @@ predict match outcomes). It answers two kinds of question:
 - **Football-world knowledge** (team histories, World Cup records, players) — via **RAG** over
   Wikipedia articles, embedded with `mistral-embed`.
 
-It deliberately **researches; it does not predict** — a calibrated score predictor is a
-statistics-model job, not an LLM one, so the assistant sticks to grounded facts.
+It is a **match-prep analyst, not a predictor**. The scoreline is the player's call (their game
+entry is winner + exact score), so the assistant arms that decision with grounded analysis — recent
+form, what's at stake, and a reasoned read on how each team is likely to play (aggressive vs
+defensive, high- vs low-scoring) — and deliberately **never states a scoreline or declares a
+winner**. A calibrated scoreline is a statistics-model job, not an LLM's; the assistant stays in its
+lane and hands the prediction back to the user.
 
 ## Architecture
 
