@@ -54,6 +54,7 @@ def answer_with_rag(query, k=5):
             },
             {"role": "user", "content": f"Context:\n{context}\n\nQuestion: {query}"},
         ],
+        temperature=0
     )
     return {"answer": response.choices[0].message.content, "chunks": hits}
 
@@ -108,16 +109,72 @@ def run_judge_tests():
         print(f"[{ok}] {case['name']}: expected={case['expected']} got={got}")
 
 
+EVAL_QUESTIONS = [
+    "How many times has Brazil won the World Cup?",
+    "Who won the 1950 World Cup?",
+    "What was the attendance at the deciding match of the 1950 World Cup?",
+    "How has Germany performed across World Cup history?",
+    "Has Canada ever won the World Cup?",
+    "Which country hosted and won the 1998 World Cup?",
+]
 
-# if __name__ == "__main__":
-#     q = "What was the attendance at the 1950 FIFA World Cup final?"
-#     result = answer_with_rag(q)
-#     print("ANSWER:\n", result["answer"], "\n")
 
-#     verdict = check_faithfulness(result["answer"], result["chunks"])
-#     print("FAITHFUL:", verdict["faithful"])
-#     print("UNSUPPORTED:", verdict["unsupported_claims"])
-#     print("REASONING:", verdict.get("reasoning", ""))
+def check_answer_relevancy(question, answer):
+    prompt = (
+        "You are an evaluator scoring ANSWER RELEVANCY: how well an ANSWER addresses "
+        "the QUESTION that was asked.\n\n"
+        "Judge ONLY whether the answer is on-topic and actually responds to the question. "
+        "Do NOT judge whether the answer is factually correct, and do NOT use any outside "
+        "knowledge — correctness is graded separately. An answer can even be wrong but still "
+        "relevant if it directly addresses the question.\n\n"
+        "Score from 0.0 to 1.0 using this scale:\n"
+        "- 1.0  — directly and completely answers the exact question asked.\n"
+        "- 0.7-0.9 — answers the question but is partial, hedged, or padded with irrelevant material.\n"
+        "- 0.4-0.6 — loosely related: addresses the topic, or answers a different question.\n"
+        "- 0.0-0.3 — does not answer at all: declines, says it doesn't know, is empty, or off-topic.\n\n"
+        "Respond as JSON with keys: relevancy (number between 0 and 1), reasoning (string, one sentence)."
+    )
+    messages=[
+        { "role": "system", "content": prompt },
+        { "role": "user", "content": f"QUESTION: {question}\n\n ANSWER: {answer}" }
+    ]
+    response = client.chat.complete(
+        model="mistral-small-latest",
+        messages=messages,
+        response_format={ "type": "json_object" },
+        temperature=0
+    )
+
+    return json.loads(response.choices[0].message.content)
+
+
+def run_system_eval():
+    faithful_count = 0
+    relevancy_sum = 0
+    for question in EVAL_QUESTIONS:
+        response = answer_with_rag(question)
+
+        faithfulness_verdict = check_faithfulness(response["answer"], response["chunks"])
+        is_faithful = faithfulness_verdict.get("faithful")
+
+        relevancy_verdict = check_answer_relevancy(question, response["answer"])
+        relevancy_sum += relevancy_verdict.get("relevancy")
+
+
+        if is_faithful:
+            faithful_count += 1
+
+        status = "faithful" if is_faithful else "NOT faithful"
+        print(f"[{status}] {question}")
+        print(f"    -> {response['answer'][:200]}")
+        if not is_faithful:
+            print(f"    unsupported: {faithfulness_verdict.get('unsupported_claims')}")
+    faithfulness_score = faithful_count / len(EVAL_QUESTIONS)
+    avg_relevancy = relevancy_sum / len(EVAL_QUESTIONS)
+
+    print(f"\nFaithfulness: {faithfulness_score:.0%} ({faithful_count}/{len(EVAL_QUESTIONS)})")
+    print(f"\nRelevancy Score: {avg_relevancy:.0%}")
+
 
 if __name__ == "__main__":
-    run_judge_tests()
+    run_system_eval()
