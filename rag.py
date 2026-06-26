@@ -24,7 +24,8 @@ matrix = np.array([c["embedding"] for c in chunks])
 matrix = matrix / np.linalg.norm(matrix, axis=1, keepdims=True)
 
 
-def search(query, k=5):
+# k iterated to 10 after eval runs.
+def search(query, k=10):
     """Return the k chunks whose meaning is closest to the query."""
     q = np.array(
         client.embeddings.create(model="mistral-embed", inputs=[query]).data[0].embedding
@@ -38,7 +39,7 @@ def search(query, k=5):
     ]
 
 
-def answer_with_rag(query, k=5):
+def answer_with_rag(query, k=10):
     hits = search(query, k)
     context = "\n\n".join(h["text"] for h in hits)
 
