@@ -3,6 +3,7 @@ from pathlib import Path
 
 import football_data
 import game_data
+import live_data
 import rag
 
 from mcp.server.fastmcp import FastMCP
@@ -41,6 +42,15 @@ def get_world_cup_record(team: str) -> dict:
     years — by team name like 'Brazil'. Use for historical 'has X ever won the World Cup' or
     'how many World Cups has X won' questions; returns 0 titles for teams that never won."""
     return football_data.world_cup_record(team)
+
+
+@mcp.tool()
+def get_current_form(team: str) -> dict:
+    """Return a team's form in the CURRENT 2026 World Cup — matches played so far, win/draw/loss
+    record, goals for/against, and per-match results — by team name like 'Brazil'. Use for
+    'how is X doing this World Cup' / current-form / recent-results questions. Fetched live from
+    openfootball and refreshed around match times; NOT for all-time history (use get_world_cup_record)."""
+    return live_data.current_form(team)
 
 
 @mcp.tool()
