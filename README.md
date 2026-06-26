@@ -101,15 +101,15 @@ RAG; prediction → neither).
 - [x] **RAG retrieval** — cosine-similarity semantic search over the embeddings
 
 **Quality — making the answers trustworthy**
-- [ ] **Faithfulness eval** *(in progress)* — an LLM-as-judge that verifies answers are grounded in the retrieved chunks, not the model's own memory. Becomes the measuring stick for everything below.
-- [ ] **Advanced RAG** — reranking, query rewriting / HyDE, smarter chunking; each kept only if it moves the eval number
+- [x] **Faithfulness + relevancy eval** — an LLM-as-judge that checks answers are grounded in the retrieved chunks (faithfulness) *and* actually address the question (relevancy), with a judge-validation set and per-question diagnostics. The measuring stick for everything below.
+- [x] **Advanced RAG** — eval-driven retrieval-depth tuning (a measured faithfulness gain); reranking / HyDE / smarter chunking deferred until the eval shows they're needed
 
 **Usefulness — real football data**
-- [ ] **Live football data tools** — head-to-head, recent form, standings via a football API, with a caching layer ("fetch once, serve many") to stay within free rate limits
+- [x] **Football-world data (openfootball)** — all-time World Cup titles and current-tournament form, with a schedule-gated live cache (refresh only around matches, not on a blind timer); routed via the agent with observable tool calls and a forgiving team resolver (code *or* name). Head-to-head and standings still to add.
 - [ ] **Proprietary game tools** — "where am I going wrong", league prediction trends (per-user scoped, honoring the game's reveal-after-lock rule)
 
 **Going deeper on the model**
-- [ ] **Fine-tuning** — a small Mistral fine-tune for behavior/format that prompting can't pin down reliably; added only when prompt-engineering plateaus, and judged by the same eval
+- [ ] **Fine-tuning** *(in progress)* — a small Mistral fine-tune for behavior/format that prompting can't pin down reliably; taken on now that the system works and the eval can measure the before/after
 - [ ] **Inference & serving** — quantization and cost/latency trade-offs for running it cheaply at the game's scale
 
 **Production**
