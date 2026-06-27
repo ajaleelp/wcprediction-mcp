@@ -36,12 +36,30 @@ RAG; the scoreline → the user's call, never the assistant's).
 - [ ] **Proprietary game tools** — "where am I going wrong", league prediction trends (per-user scoped, honoring the game's reveal-after-lock rule)
 
 **Going deeper on the model**
-- [ ] **Fine-tuning** *(in progress)* — a QLoRA fine-tune for the assistant's core behavior: act as a grounded match-prep analyst (form, stakes, likely approach) that never fabricates a scoreline or winner, A/B'd against base+prompt on the eval
+- [x] **Fine-tuning** — a QLoRA fine-tune (Mistral-7B, 4-bit, LoRA r=16) teaching the match-prep analyst behaviour; A/B'd against base on a held-out matchup, the adapter holds the full briefing where base + the same minimal prompt reverts to a generic answer. → [notebook](notebooks/finetune_qlora.ipynb) · [adapter on Hugging Face](https://huggingface.co/ajaleelp/wc-analyst-lora)
 - [ ] **Inference & serving** — quantization and cost/latency trade-offs for running it cheaply at the game's scale
 
 **Production**
 - [ ] **Vector DB** — swap the in-memory numpy retrieval for `pgvector` in the existing Postgres
 - [ ] **Chat widget** — serve the assistant inside the game itself
+
+## Fine-tuning the behaviour (QLoRA)
+
+The match-prep analyst behaviour is also available as a **QLoRA fine-tune** of
+`Mistral-7B-Instruct-v0.3` (4-bit base; LoRA r=16/α=32 on all linear layers — 0.58% of params
+trained on a small, hand-seeded + LLM-generated dataset). The goal was to learn fine-tuning
+hands-on and to test whether the behaviour can be *baked into the weights* rather than prompted.
+
+**Result:** on an unseen matchup with a *minimal* prompt, the fine-tune produces the full structured
+briefing (form → head-to-head → style → news → hedged lean, no scoreline), while the base model on
+the same prompt reverts to a generic paragraph — the behaviour moved into the adapter.
+
+- **Notebook (with outputs):** [`notebooks/finetune_qlora.ipynb`](notebooks/finetune_qlora.ipynb)
+- **Adapter on Hugging Face:** [`ajaleelp/wc-analyst-lora`](https://huggingface.co/ajaleelp/wc-analyst-lora)
+
+> Trained on ~19 examples as a learning exercise — a demonstration of the QLoRA workflow and
+> behaviour-tuning, not a production model. It fine-tunes the open Mistral-7B (self-hostable),
+> which is distinct from the `mistral-small-latest` API the agents call.
 
 ## The idea
 
