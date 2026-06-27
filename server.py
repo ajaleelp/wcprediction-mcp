@@ -68,6 +68,18 @@ def get_current_form(team: str) -> dict:
 
 
 @mcp.tool()
+def get_head_to_head(team_a: str, team_b: str) -> dict:
+    """Return the all-time World Cup head-to-head between two teams — every WC meeting (year,
+    round, score, winner) and the win/draw tally — by code or name like 'BRA' or 'Brazil'.
+    Use for 'how do X and Y compare head-to-head' / past-meetings questions."""
+    _log_tool("get_head_to_head", team_a=team_a, team_b=team_b)
+    return football_data.head_to_head(
+        teams.openfootball_name(_resolve_or_raise(team_a)),
+        teams.openfootball_name(_resolve_or_raise(team_b)),
+    )
+
+
+@mcp.tool()
 def search_knowledge(query: str) -> list[dict]:
     """Search the football knowledge base (team histories, notable players, World Cup
     records, playing styles) for background passages relevant to a question. Use this for

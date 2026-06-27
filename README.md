@@ -30,7 +30,8 @@ RAG; the scoreline → the user's call, never the assistant's).
 - [x] **Advanced RAG** — eval-driven retrieval-depth tuning (a measured faithfulness gain); reranking / HyDE / smarter chunking deferred until the eval shows they're needed
 
 **Usefulness — real football data**
-- [x] **Football-world data (openfootball)** — all-time World Cup titles and current-tournament form, with a schedule-gated live cache (refresh only around matches, not on a blind timer); routed via the agent with observable tool calls and a forgiving team resolver (code *or* name). Head-to-head and standings still to add.
+- [x] **Football-world data (openfootball)** — all-time World Cup titles and current-tournament form, with a schedule-gated live cache (refresh only around matches, not on a blind timer); routed via the agent with observable tool calls and a forgiving team resolver (code *or* name). Standings still to add.
+- [x] **Head-to-head** — every World Cup meeting between two teams (year, round, score, winner) and the win/draw tally, derived from the openfootball data
 - [x] **Live news & injuries** — Mistral's built-in web search on the native agent, so the read reflects current news/injuries, not just historical data
 - [ ] **Proprietary game tools** — "where am I going wrong", league prediction trends (per-user scoped, honoring the game's reveal-after-lock rule)
 
